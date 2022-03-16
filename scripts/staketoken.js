@@ -10,7 +10,7 @@ const { ethers } = require("hardhat");
 
 async function main() {
   const stakeContract = await hre.ethers.getContractFactory("BoardStake");
-  const stake = await stakeContract.deploy();
+  const stake = await stakeContract.deploy("0x7234590b742cDa06dAd5B9D0C72CE3E2380F5246");
   await stake.deployed();
   console.log("Contract Address", stake.address);
 }

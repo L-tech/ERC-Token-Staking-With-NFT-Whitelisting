@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "hardhat/console.sol";
 
 contract BoardStake {
+	IERC20 public _token;
 	IERC721 public _BoredApeNFT;
 
 	struct Stake {
@@ -17,16 +18,17 @@ contract BoardStake {
 	mapping(address => stakers) claims;
 	uint public minAmount = 100;
 
-	constructor(){
+	constructor(address token){
+		_token = IERC20(token);
 		_BoredApeNFT = IERC721(0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D);
 	}
 
-	function stake(uint _amount, IERC20 token) public returns (bool) {
+	function stake(uint _amount) public returns (bool) {
 		require(_amount > minAmount, "Minimum 100 tokens");
-		uint256 tokenBalance = token.balanceOf(msg.sender);
+		uint256 tokenBalance = _token.balanceOf(msg.sender);
 		require(tokenBalance>= _amount, "Insufficient token");
 		require(_BoredApeNFT.balanceOf(msg.sender) > 0, "Only board apes holders" );
-		bool transferred = token.transferFrom(msg.sender, address(this), _amount);
+		bool transferred = _token.transferFrom(msg.sender, address(this), _amount);
 		require(transferred, "Token Transfer Failed");
 		Stake memory claim;
 		claim.amount = _amount;
@@ -43,10 +45,10 @@ contract BoardStake {
 		if (validity >= 3) {
 			uint interests = validity * user.interestPerDay;
 			uint total = interests + user.amount;
-			token.transfer(msg.sender, user.total);
+			_token.transfer(msg.sender, user.total);
 		}
 		else {
-			token.transfer(msg.sender, user.amount);
+			_token.transfer(msg.sender, user.amount);
 		}
 		return true;
 	}

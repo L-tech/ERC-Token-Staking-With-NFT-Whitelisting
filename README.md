@@ -1,8 +1,6 @@
-# Basic Sample Hardhat Project
+# Token Staking with NFT Whitelisting
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, a sample script that deploys that contract, and an example of a task implementation, which simply lists the available accounts.
-
-Try running some of the following tasks:
+A staking contract that accepts an ERC20 token called boredApeToken When people stake brt, they get 10% of it per month provided they have staked for 3 days or more. Criteria - Only BoredApes owners can use your contract
 
 ```shell
 npx hardhat accounts
