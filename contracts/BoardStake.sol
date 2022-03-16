@@ -8,7 +8,7 @@ import "hardhat/console.sol";
 contract BoardStake {
 	IERC721 public _BoredApeNFT;
 
-	struct stakes {
+	struct Stake {
 		uint amount;
 		uint stakeTime;
 		uint interestPerDay;
@@ -28,7 +28,7 @@ contract BoardStake {
 		require(_BoredApeNFT.balanceOf(msg.sender) > 0, "Only board apes holders" );
 		bool transferred = token.transferFrom(msg.sender, address(this), _amount);
 		require(transferred, "Token Transfer Failed");
-		claims memory claim;
+		Stake memory claim;
 		claim.amount = _amount;
 		claim.stakeTime = block.timestamp;
 		user.interestPerDay = (_amount * 10 / 100) / 30;
@@ -37,8 +37,8 @@ contract BoardStake {
 	}
 
 	function withdraw() public returns (bool) {
+		Stake memory user = claims[msg.sender];
 		require(claims[msg.sender].amount > 0, " You need to stake to withdraw");
-		stakers memory user = claims[msg.sender];
 		uint validity = (user.stakeTime - block.timestamp) / 60 / 60 / 24;
 		if (validity >= 3) {
 			uint interests = validity * user.interestPerDay;
